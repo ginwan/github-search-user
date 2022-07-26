@@ -22,16 +22,36 @@ const GithubProvider = ({ children }) => {
 
   const searchGithubUser = async (user) => {
     toggleError();
-    // setLoading(true)
+    setLoading(true);
     const response = await axios(`${rootUrl}/users/${user}`).catch((err) =>
       console.log(err)
     );
     console.log(response);
     if (response) {
       setGithubUser(response.data);
+      const { login, followers_url } = response.data;
+
+      // to get response at the same time
+      await Promise.allSettled([
+        axios(`${rootUrl}/users/${login}/repos?per_page=100`),
+        axios(`${followers_url}?per_page=100`),
+      ])
+        .then((results) => {
+          const [repos, followers] = results;
+          const status = "fulfilled";
+          if (repos.status === status) {
+            setRepos(repos.value.data);
+          }
+          if (followers.status === status) {
+            setFollowers(followers.value.data);
+          }
+        })
+        .catch((err) => console.log(err));
     } else {
       toggleError(true, "there is no user with that username.");
     }
+    checkRequest();
+    setLoading(false);
   };
 
   // check rate
@@ -59,7 +79,15 @@ const GithubProvider = ({ children }) => {
 
   return (
     <GithubContext.Provider
-      value={{ githubUser, repos, followers, request, error, searchGithubUser }}
+      value={{
+        githubUser,
+        repos,
+        followers,
+        request,
+        error,
+        searchGithubUser,
+        loading,
+      }}
     >
       {children}
     </GithubContext.Provider>
