@@ -25,7 +25,7 @@ export default {
   hireable: null,
   bio: "I am a software developer interested in web development.",
   twitter_username: null,
-  public_repos: 4,
+  public_repos: 5,
   public_gists: 16,
   followers: 0,
   following: 1,

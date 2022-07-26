@@ -7,7 +7,7 @@ const Card = () => {
   const {
     avatar_url,
     html_url,
-    name,
+    login,
     company,
     blog,
     bio,
@@ -17,10 +17,10 @@ const Card = () => {
   return (
     <Wrapper>
       <header>
-        <img src={avatar_url} alt={name} />
+        <img src={avatar_url} alt={login} />
         <div>
-          <h4>{name}</h4>
-          <p>@{twitter_username || "ginwan11"}</p>
+          <h4>{login}</h4>
+          <p>@{twitter_username || "twitter"}</p>
         </div>
         <a href={html_url}>follow</a>
       </header>
